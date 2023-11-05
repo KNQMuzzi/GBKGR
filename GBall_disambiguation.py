@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 from scipy.io import loadmat, savemat
 from tools import *
+import json
 
 class Ball:
     def __init__(self, features, labels, partial_target, sample_indexs) -> None:
@@ -25,7 +26,7 @@ class Ball:
         base_Yconfidence = init_Y_confidence(self.partial_target)
         # print(top_k_neigs.shape, k)
         candidate = get_candidate(self.partial_target)
-        
+
         wr = [k - i for i in range(k)]
         Q = self.partial_target.shape[1]
         result = []
@@ -35,7 +36,7 @@ class Ball:
 
             percandidate = candidate[i]
             sizecandidate = len(percandidate)
-            
+
             for t in range(sizecandidate):
                 indexlabel = percandidate[t]
                 for j in range(k):
@@ -59,7 +60,7 @@ class BallList:
         # self.partial_target = partial_target
         self.balls = self.build_ball(features, labels, partial_target, ball_split_len)
         self.ball_size = len(self.balls)
-    
+
         # 分裂球
     def build_ball(self, features, labels, partial_target, ball_split_len):
         sample_indexs = [i for i in range(features.shape[0])]
@@ -153,7 +154,7 @@ class BallList:
             ball = Ball(clusrer_features, clusrer_labels, clusrer_partial_target, clusrer_sample_indexs)
             balls.append(ball)
         return balls
-    
+
     def get_Yconfidence(self, use_base_Y=False):
         '''
             use_base_Y： 是否使用初始化的Yconfidence
@@ -168,18 +169,32 @@ class BallList:
                 result[idx, :] = ball_Y[i, :]
         return result
 
-def demo():
+
+
+if __name__ == "__main__":
+
     use_base_Y = True
     ball_split_len = 3
-
     dataset_path = 'demo.mat'
-    datas = loadmat(dataset_path)
+    datas = loadmat('demo.mat')
+
     features = datas['data']
     labels = datas['target']
     partial_target = datas['partial_target']
 
+    with open('demo.txt', 'w') as f:
+        f.write(f"features: {features.shape}\n")
+        for feature in features:
+            f.write(str(feature) + '\n')
+        f.write(f"label: {labels.shape}\n")
+        for label in labels:
+            f.write(str(label) + '\n')
+        f.write(f"partial_target: {partial_target.shape}\n")
+        for target in partial_target:
+            f.write(str(target) + '\n')
+
     labels, partial_target = process_csc_matrix(labels, partial_target)
-    
+
     balls = BallList(features, labels, partial_target, ball_split_len)
     Yconfidence = balls.get_Yconfidence(use_base_Y)
 
@@ -192,6 +207,3 @@ def demo():
     savemat('demo_ld.mat', result)
 
     print(result)
-
-if __name__ == "__main__":
-    demo()
