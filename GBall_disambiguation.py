@@ -182,17 +182,6 @@ if __name__ == "__main__":
     labels = datas['target']
     partial_target = datas['partial_target']
 
-    with open('demo.txt', 'w') as f:
-        f.write(f"features: {features.shape}\n")
-        for feature in features:
-            f.write(str(feature) + '\n')
-        f.write(f"label: {labels.shape}\n")
-        for label in labels:
-            f.write(str(label) + '\n')
-        f.write(f"partial_target: {partial_target.shape}\n")
-        for target in partial_target:
-            f.write(str(target) + '\n')
-
     labels, partial_target = process_csc_matrix(labels, partial_target)
 
     balls = BallList(features, labels, partial_target, ball_split_len)
