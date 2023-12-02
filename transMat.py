@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+###---(oﾟvﾟ)ノ---###
+#Author Start
+# hint Date: 2023-11-29 16:07:51
+# hint LastEditors: Jupiter.Q.Peng
+# hint LastEditTime: 2023-12-02 17:26:07
+# hint Description:
+# hint FilePath: \GBKGR\transMat.py
+# Author End
+
 import pandas as pd
 from scipy.io import loadmat, savemat
 import numpy as np
